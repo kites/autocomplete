@@ -26,14 +26,15 @@ function Autocomplete(el, url, opts) {
   if(!(this instanceof Autocomplete)) return new Autocomplete(el, url, opts);
 
   opts = opts || {};
-
+  
   this.el = el;
   this.coords = getOffset(el);
   this.url = url;
   this._display = true;
   this.throttle = opts.throttle || 200;
+  this.throttleSearch = throttle(this.search.bind(this), this.throttle);
   this.headers = opts.headers || {};
-  this.throttledSearch = throttle(this.search.bind(this), this.throttle);
+  this.keysIgnore = opts.keysIgnore || [];
   this._key = el.getAttribute('name');
   this.formatter = function(item) { return item; };
 
@@ -61,7 +62,11 @@ Emitter(Autocomplete.prototype);
 
 Autocomplete.prototype.enable = function() {
   this.emit('enabled');
-  event.bind(this.el, 'keyup', this.throttledSearch);
+  self = this
+  event.bind(this.el, 'keyup', function(e){
+    self.keyCode = e.which
+    self.throttledSearch
+  });
   return this;
 };
 
@@ -184,6 +189,12 @@ Autocomplete.prototype.search = function(fn) {
   if(!this._key)
     throw new Error('autocomplete: no key to query on, add key in input[name] or key()');
 
+  for (var i = 0; i < this.keysIgnore.length; i++) {
+    if (fn.keyCode === this.keysIgnore[i]) {
+      return this;
+    }
+  }
+
   var self = this,
       url = this.url,
       val = encodeURIComponent(this.el.value),
@@ -280,7 +291,7 @@ Autocomplete.prototype.respond = function(fn, query, res) {
 
   if(!isArray(items)) throw new Error('autocomplete: response is not an array');
 
-  this.emit('response', items);
+  this.emit('response', items, query);
   fn(null, items);
 
   if(!this._display) {
