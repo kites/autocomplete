@@ -26,16 +26,24 @@ function Autocomplete(el, url, opts) {
   if(!(this instanceof Autocomplete)) return new Autocomplete(el, url, opts);
 
   opts = opts || {};
-
+  
   this.el = el;
   this.coords = getOffset(el);
   this.url = url;
   this._display = true;
   this.throttle = opts.throttle || 200;
   this.headers = opts.headers || {};
-  this.throttledSearch = throttle(this.search.bind(this), this.throttle);
+  //var self = this
+  this.throttledSearch = function () {
+    throttle(this.search.bind(this), this.throttle);
+    if (this.func) {
+      window.clearTimeout(this.func)
+    }
+    this.func = window.setTimeout(this.search(this), 200)
+  }
   this._key = el.getAttribute('name');
   this.formatter = function(item) { return item; };
+  this.func;         // custom Timeout function in keyup to fix bug in throttle
 
   // Prevents the native autocomplete from showing up
   this.el.setAttribute('autocomplete', 'off');
