@@ -35,9 +35,6 @@ function Autocomplete(el, url, opts) {
   this.headers = opts.headers || {};
   var self = this
   this.throttledSearch = function () {
-    console.log("In ThrottledSearch")
-    console.log(self)
-    console.log(self.search)
     throttle(self.search.bind(self), self.throttle);
     if (self.func) {
       window.clearTimeout(self.func)
