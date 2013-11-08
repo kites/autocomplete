@@ -33,13 +33,13 @@ function Autocomplete(el, url, opts) {
   this._display = true;
   this.throttle = opts.throttle || 200;
   this.headers = opts.headers || {};
-  var self = this
+  //var self = this
   this.throttledSearch = function () {
-    throttle(self.search.bind(self), self.throttle);
-    if (self.func) {
-      window.clearTimeout(self.func)
+    throttle(this.search.bind(this), this.throttle);
+    if (this.func) {
+      window.clearTimeout(this.func)
     }
-    self.func = window.setTimeout(self.search(self), 200)
+    this.func = window.setTimeout(this.search(this), 200)
   }
   this._key = el.getAttribute('name');
   this.formatter = function(item) { return item; };
