@@ -65,7 +65,7 @@ Autocomplete.prototype.enable = function() {
   self = this
   event.bind(this.el, 'keyup', function(e){
     self.keyCode = e.which
-    self.throttledSearch
+    self.throttleSearch(e)
   });
   return this;
 };
@@ -183,7 +183,7 @@ Autocomplete.prototype.format = function(format) {
  */
 
 Autocomplete.prototype.search = function(fn) {
-  if(fn && (fn.keyCode == 13 || fn.keyCode == 27)) return this;
+  if(fn && (fn.keyCode == 27)) return this;
   else if(typeof fn !== 'function') fn = noop;
 
   if(!this._key)
@@ -212,7 +212,7 @@ Autocomplete.prototype.search = function(fn) {
   } else {
     query[this._key] = val;
   }
-
+  
   request
     .get(url)
     .query(query)
