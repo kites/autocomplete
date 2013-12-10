@@ -212,6 +212,8 @@ Autocomplete.prototype.search = function(fn) {
   } else {
     query[this._key] = val;
   }
+ 
+  this.emit('before-send', query);
 
   request
     .get(url)
