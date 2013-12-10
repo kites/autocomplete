@@ -194,6 +194,8 @@ Autocomplete.prototype.search = function(fn) {
       return this;
     }
   }
+  
+  this.emit('before-send', query);
 
   var self = this,
       url = this.url,
