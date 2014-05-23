@@ -2,7 +2,7 @@
   "name": "autocomplete",
   "version": "0.0.2",
   "description": "Autocomplete component",
-  "main": "test/server.js",
+  "main": "index.js",
   "directories": {
     "test": "test"
   },
